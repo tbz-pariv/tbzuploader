@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+from future import standard_library
+standard_library.install_aliases()
 import collections
 import datetime
 import logging
@@ -8,7 +10,7 @@ import os
 import re
 import shutil
 import time
-import urlparse
+import urllib.parse
 from collections import defaultdict
 
 import requests
@@ -36,7 +38,7 @@ def upload_list_of_pairs__single(directory, url, pairs, done_directory, verify):
 
 
 def upload_list_of_pairs__single__success(directory, url, pairs, done_directory, response):
-    parsed_url = urlparse.urlparse(url)
+    parsed_url = urllib.parse.urlparse(url)
     url = '{}://{}/{}'.format(parsed_url.scheme, parsed_url.netloc.split('@')[1], response.headers['Location'])
     print('Success :-) %s' % (url))
     if not os.path.exists(done_directory):
@@ -62,7 +64,7 @@ def check_duplicates(pairs):
     single_list = []
     for file_names in pairs:
         single_list.extend(file_names)
-    duplicates = [item for item, count in collections.Counter(single_list).items() if count > 1]
+    duplicates = [item for item, count in list(collections.Counter(single_list).items()) if count > 1]
     if duplicates:
         raise ValueError('There are duplicates. Upload refused: %s' % duplicates)
 

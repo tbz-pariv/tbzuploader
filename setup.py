@@ -9,6 +9,7 @@ setuptools.setup(
     zip_safe=False,
     install_requires=[
         'requests',
+        'future',
     ],
 
     include_package_data=True,
