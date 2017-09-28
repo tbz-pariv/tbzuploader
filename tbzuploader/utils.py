@@ -14,16 +14,20 @@ from collections import defaultdict
 import requests
 
 
-def upload_list_of_pairs(directory, url, list_of_pairs, done_directory):
+def upload_list_of_pairs(directory, url, list_of_pairs, done_directory, verify=True):
     for pairs in list_of_pairs:
-        upload_list_of_pairs__single(directory, url, pairs, done_directory)
+        upload_list_of_pairs__single(directory, url, pairs, done_directory, verify)
 
 
-def upload_list_of_pairs__single(directory, url, pairs, done_directory):
+def upload_list_of_pairs__single(directory, url, pairs, done_directory, verify):
     open_file_list = []
     for file_name in pairs:
         open_file_list.append(('files', open(os.path.join(directory, file_name), 'rb')))
-    response = requests.post(url, files=open_file_list, verify=False, allow_redirects=False)
+    try:
+        response = requests.post(url, files=open_file_list, allow_redirects=False,
+                             verify=verify)
+    except requests.exceptions.SSLError as exc:
+        raise ValueError('%s. Use --no-ssl-cert-verification if you want ....' % exc)
     if response.status_code == 201:
         return upload_list_of_pairs__single__success(directory, url, pairs, done_directory, response)
     print('Failed: %s' % pairs)

@@ -4,7 +4,7 @@ setuptools.setup(
     name='tbzuploader',
     version='2017.2.0',
     license='Apache Software License 2.0',
-    long_description=open('README.txt').read(),
+    long_description=open('README.rst').read(),
     packages=setuptools.find_packages(),
     zip_safe=False,
     install_requires=[

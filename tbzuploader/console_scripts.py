@@ -20,6 +20,7 @@ def main():
                         default=default_min_age_seconds, type=int)
     parser.add_argument('--done-directory files get moved to this directory after successful upload. Defaults to {local_directory}/done',
                         dest='done_directory')
+    parser.add_argument('--no-ssl-cert-verification', action='store_true')
     args = parser.parse_args()
     if not args.list_of_patterns:
         raise ValueError('At least one --patterns=... is needed')
@@ -33,6 +34,6 @@ def main():
     if not list_of_pairs:
         logging.info('No pairs to upload found.')
         return
-    utils.upload_list_of_pairs(args.local_directory, args.url, list_of_pairs, done_directory)
+    utils.upload_list_of_pairs(args.local_directory, args.url, list_of_pairs, done_directory, verify=not args.no_ssl_cert_verification)
 
 
