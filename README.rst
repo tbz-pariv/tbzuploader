@@ -1,3 +1,7 @@
+.. image:: https://travis-ci.org/guettli/tbzuploader.svg?branch=master
+    :target: https://travis-ci.org/guettli/tbzuploader
+
+
 tbzuploader
 ===========
 
