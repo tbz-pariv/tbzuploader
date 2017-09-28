@@ -18,7 +18,7 @@ def main():
                         dest='list_of_patterns', action='append')
     parser.add_argument('--min-age-seconds', help='Skip files which are too young. Default: %s' % default_min_age_seconds,
                         default=default_min_age_seconds, type=int)
-    parser.add_argument('--done-directory files get moved to this directory after successful upload. Defaults to {local_directory}/done',
+    parser.add_argument('--done-directory', help='files get moved to this directory after successful upload. Defaults to {local_directory}/done',
                         dest='done_directory')
     parser.add_argument('--no-ssl-cert-verification', action='store_true')
     args = parser.parse_args()
