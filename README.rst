@@ -41,6 +41,30 @@ Usage::
                             upload. Defaults to {local_directory}/done
       --no-ssl-cert-verification
 
+Install
+=======
+
+Install for usage from `pypi <https://pypi.python.org/pypi/tbzuploader/>`_::
+
+    pip install tbzuploader
+
+
+Development
+===========
+
+Install tbzuploader for development::
+
+    virtualenv tbzuploader-env
+    cd tbzuploader-env
+    . ./bin/activate
+    pip install -e git+https://github.com/guettli/tbzuploader.git#egg=tbzuploader
+    pip install -r src/tbzuploader/requirements.txt
+    cd src/tbzuploader
+    pytest # all test ok?
+    pyCharm src/tbzuploader/...
+    pytest # all test still ok?
+    .... I am waiting for your pull request :-)
+
 About
 =====
 
