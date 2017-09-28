@@ -49,15 +49,32 @@ Install for usage from `pypi <https://pypi.python.org/pypi/tbzuploader/>`_::
     pip install tbzuploader
 
 
-Development
-===========
+Development Install on Python2
+==============================
 
-Install tbzuploader for development::
+Install tbzuploader for development on Python2::
 
     virtualenv tbzuploader-env
     cd tbzuploader-env
     . ./bin/activate
     pip install -e git+https://github.com/guettli/tbzuploader.git#egg=tbzuploader
+
+Development Install on Python3
+==============================
+
+Install tbzuploader for development on Python3::
+
+    python3 -m venv tbzuploader-py3env
+    cd tbzuploader-py3env
+    . ./bin/activate
+    pip install --upgrade pip
+    pip install -e git+https://github.com/guettli/tbzuploader.git#egg=tbzuploader
+
+Development Testing
+===================
+
+Testing::
+
     pip install -r src/tbzuploader/requirements.txt
     cd src/tbzuploader
     pytest # all test ok?
