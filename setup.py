@@ -5,6 +5,7 @@ setuptools.setup(
     version='2017.10.0',
     license='Apache Software License 2.0',
     long_description=open('README.rst').read(),
+    url='https://github.com/guettli/tbzuploader',
     packages=setuptools.find_packages(),
     zip_safe=False,
     install_requires=[
