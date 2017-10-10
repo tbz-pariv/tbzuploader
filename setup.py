@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
     name='tbzuploader',
-    version='2017.11.0',
+    version='2017.12.0',
     license='Apache Software License 2.0',
     long_description=open('README.rst').read(),
     url='https://github.com/guettli/tbzuploader',
