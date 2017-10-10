@@ -9,13 +9,13 @@ Generic http upload tool.
 
 If the http upload was successfull, files get moved to a "done" sub directory.
 
-Handles pairs of files.
-
-For example you have for files: a.pdf, a.xml, b.pdf, b.xml
-
-The first upload should take a.pdf and a.xml, and the second upload b.pdf and b.xml.
-
 The upload is considered successfull by tbzuploader if the servers replies with http status `201 Created <https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#2xx_Success>`_
+
+Additional features: Handles pairs of files.
+
+For example you have four files: a.pdf, a.xml, b.pdf, b.xml
+
+The first upload should take a.pdf and a.xml, and the second upload b.pdf and b.xml, then use --patterns="*.pdf *.xml"
 
 Usage
 =====
@@ -36,8 +36,9 @@ Usage::
       -h, --help            show this help message and exit
       --patterns= LIST_OF_PATTERNS
                             List of file endings which should get uploaded
-                            together. --patterns="*.pdf *.xml" foo.pdf and foo.xml
-                            get uploaded together
+                            together. Example: --patterns="*.pdf *.xml" The pairs
+                            (a.pdf, a.xml) and (b.pdf, b.xml) get uploaded
+                            together
       --min-age-seconds MIN_AGE_SECONDS
                             Skip files which are too young. Default: 60
       --done-directory DONE_DIRECTORY

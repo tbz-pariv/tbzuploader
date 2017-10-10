@@ -53,12 +53,22 @@ def upload_list_of_pairs__single__success(directory, url, pairs, done_directory,
 
 
 def get_pairs_from_directory(directory, list_of_patterns):
+    if not list_of_patterns:
+        return get_pairs_from_directory__all_files__no_pairs(directory)
     pairs = []
     for patterns in list_of_patterns:
         pairs.extend(get_pairs_from_directory_single_pattern(directory, patterns))
     check_duplicates(pairs)
     return pairs
 
+def get_pairs_from_directory__all_files__no_pairs(directory):
+    files=[]
+    for file_name in sorted(os.listdir(directory)):
+        file_abs = os.path.join(directory, file_name)
+        if not os.path.isfile(file_abs):
+            continue
+        files.append(file_name)
+    return [(item,) for item in files]
 
 def check_duplicates(pairs):
     single_list = []
@@ -74,10 +84,10 @@ def get_pairs_from_directory_single_pattern(directory, patterns):
 
     Args:
         directory:
-        patterns: "*.xml *.pdf"
+        patterns: "*.pdf *.xml"
 
     Returns:
-
+       [('a.pdf', 'a.xml'), ('b.pdf', 'b.xml')
     """
     regex_patterns = [glob_pattern_to_regex_pattern(pattern) for pattern in patterns.split()]
     matches = defaultdict(list)
