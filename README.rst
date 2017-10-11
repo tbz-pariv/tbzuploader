@@ -15,7 +15,7 @@ Additional features: Handles pairs of files.
 
 For example you have four files: a.pdf, a.xml, b.pdf, b.xml
 
-The first upload should take a.pdf and a.xml, and the second upload b.pdf and b.xml, then use --patterns="*.pdf *.xml"
+The first upload should take a.pdf and a.xml, and the second upload b.pdf and b.xml, then read the docs for `--patterns`.
 
 Usage
 =====
