@@ -12,7 +12,7 @@ default_min_age_seconds=60
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('local_directory')
-    parser.add_argument('url')
+    parser.add_argument('url', help='URL can contain http-basic-auth like this: https://apiuser:mypwd@example.com/input-process-output/')
     parser.add_argument('--patterns=',
                         help='List of file endings which should get uploaded together. Example: --patterns="*.pdf *.xml" The pairs (a.pdf, a.xml) and (b.pdf, b.xml) get uploaded together',
                         dest='list_of_patterns', action='append')
