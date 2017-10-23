@@ -30,6 +30,9 @@ def upload_list_of_pairs__single(directory, url, pairs, done_directory, verify):
                              verify=verify)
     except requests.exceptions.SSLError as exc:
         raise ValueError('%s. Use --no-ssl-cert-verification if you want ....' % exc)
+    finally:
+        for name, open_file in open_file_list:
+            open_file.close()
     if response.status_code == 201:
         return upload_list_of_pairs__single__success(directory, url, pairs, done_directory, response)
     print('Failed: %s' % pairs)
