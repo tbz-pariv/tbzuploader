@@ -24,7 +24,7 @@ def main():
     args = parser.parse_args()
     done_directory=args.done_directory
     if not done_directory:
-        done_directory=os.path.join(args.local_directory, 'done')
+        done_directory=os.path.join(args.local_directory, b'done')
     if not os.path.exists(done_directory):
         os.mkdir(done_directory)
     list_of_pairs = utils.get_pairs_from_directory(args.local_directory, args.list_of_patterns)
