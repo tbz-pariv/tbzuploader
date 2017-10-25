@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+import httplib
+
 from future import standard_library
 standard_library.install_aliases()
 import collections
@@ -36,7 +38,10 @@ def upload_list_of_pairs__single(directory, url, pairs, done_directory, verify):
     if response.status_code == 201:
         return upload_list_of_pairs__single__success(directory, url, pairs, done_directory, response)
     print('Failed: %s' % pairs)
-    print('%s %s' % (response, url)) # TODO remove password from URL. See https://stackoverflow.com/questions/46905367/remove-password-from-url
+    print('%s %s %s' % (response,
+                        httplib.responses.get(response.status_code),
+                        url, # TODO remove password from URL. See https://stackoverflow.com/questions/46905367/remove-password-from-url
+                        ))
     print(response.content)
 
 
