@@ -17,6 +17,15 @@ For example you have four files: a.pdf, a.xml, b.pdf, b.xml
 
 The first upload should take a.pdf and a.xml, and the second upload b.pdf and b.xml, then read the docs for `--patterns`.
 
+Example
+=======
+
+Example::
+
+    user@host> tbzuploader my-local-dir https://user:password@myhost/upload-files
+
+This will upload files from directory "my-local-dir" to the specified URL.
+
 Usage
 =====
 
