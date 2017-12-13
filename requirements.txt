@@ -1,3 +1,5 @@
 pytest>=3.0.6
 bumpversion
 mock
+readme_renderer
+subx

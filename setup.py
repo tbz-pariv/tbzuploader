@@ -15,6 +15,9 @@ setuptools.setup(
 
     include_package_data=True,
 
+    author='Thomas Guettler',
+    author_email='info.reprec@thomas-guettler.de',
+
     entry_points={
         'console_scripts': [
             'tbzuploader=tbzuploader.console_scripts:main',
