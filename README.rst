@@ -7,7 +7,7 @@ tbzuploader
 
 Generic http upload tool.
 
-If the http upload was successfull, files get moved to a "done" sub directory.
+If the http upload was successfull, local files get moved to a "done" sub directory.
 
 The upload is considered successfull by tbzuploader if the servers replies with http status `201 Created <https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#2xx_Success>`_
 
@@ -15,7 +15,7 @@ Additional features: Handles pairs of files.
 
 For example you have four files: a.pdf, a.xml, b.pdf, b.xml
 
-The first upload should take a.pdf and a.xml, and the second upload b.pdf and b.xml, then read the docs for `--patterns`.
+The first upload should take a.pdf and a.xml, and the second upload b.pdf and b.xml. See the docs for `--patterns`.
 
 Example
 =======
