@@ -1,12 +1,18 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+import glob
+import tempfile
 import unittest
 
 import mock
+import os
 from tbzuploader import utils
-from tbzuploader.utils import relative_url_to_absolute_url
+from tbzuploader.utils import relative_url_to_absolute_url, upload_list_of_pairs__single__success
 
+
+class DummyResponse(object):
+    headers=dict()
 
 class TestCase(unittest.TestCase):
     is_source_from_tbz = True
@@ -58,3 +64,14 @@ class TestCase(unittest.TestCase):
 
     def test_relative_url_to_absolute_url__without_scheme_with_user_and_password(self):
         self.assertEqual('http://google.com/abc', relative_url_to_absolute_url('http://user:pwd@google.com/xyz', '/abc'))
+
+    def test_upload_list_of_pairs__single__success(self):
+        directory = tempfile.mkdtemp()
+        with open(os.path.join(directory, 'foo.txt'), 'wt') as fd:
+            fd.write(':-)\n')
+        done_directory = tempfile.mkdtemp()
+        url='https://user:password@example.com/path'
+        response=DummyResponse()
+        pairs=['foo.txt']
+        upload_list_of_pairs__single__success(directory, url, pairs, done_directory, response)
+        self.assertEqual(['foo.txt'], [os.path.basename(file_name) for file_name in glob.glob(os.path.join(done_directory, '*', 'foo.txt'))])
