@@ -5,6 +5,7 @@ import unittest
 
 import mock
 from tbzuploader import utils
+from tbzuploader.utils import relative_url_to_absolute_url
 
 
 class TestCase(unittest.TestCase):
@@ -48,3 +49,12 @@ class TestCase(unittest.TestCase):
         with mock.patch('tbzuploader.utils.get_file_age',
                         return_value=100):
             self.assertEqual([['a.xml', 'a.pdf']], utils.filter_files_which_are_too_young('.', [['a.xml', 'a.pdf']], min_age_seconds=60))
+
+    def test_relative_url_to_absolute_url__is_already_with_scheme(self):
+        self.assertEqual('https://example.com/abc', relative_url_to_absolute_url('http://google.com/xyz', 'https://example.com/abc'))
+
+    def test_relative_url_to_absolute_url__without_scheme(self):
+        self.assertEqual('http://google.com/abc', relative_url_to_absolute_url('http://google.com/xyz', '/abc'))
+
+    def test_relative_url_to_absolute_url__without_scheme_with_user_and_password(self):
+        self.assertEqual('http://google.com/abc', relative_url_to_absolute_url('http://user:pwd@google.com/xyz', '/abc'))

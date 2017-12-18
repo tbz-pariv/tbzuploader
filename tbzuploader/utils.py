@@ -2,6 +2,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import httplib
+import urlparse
 
 from future import standard_library
 standard_library.install_aliases()
@@ -45,10 +46,18 @@ def upload_list_of_pairs__single(directory, url, pairs, done_directory, verify):
     print(response.content)
 
 
+def is_absolute_url(url):
+    return bool(urlparse.urlparse(url).netloc)
+
+
+def relative_url_to_absolute_url(request_url, response_location):
+    if is_absolute_url(response_location):
+        return response_location
+    parsed_url = urllib.parse.urlparse(request_url)
+    return '{}://{}{}'.format(parsed_url.scheme, parsed_url.netloc.split('@')[-1], response_location)
+
 def upload_list_of_pairs__single__success(directory, url, pairs, done_directory, response):
-    parsed_url = urllib.parse.urlparse(url)
-    url = '{}://{}/{}'.format(parsed_url.scheme, parsed_url.netloc.split('@')[1], response.headers['Location'])
-    print('Success :-) %s' % (url))
+    print('Success :-) %s' % (relative_url_to_absolute_url(url, response.headers['Location'])))
     if not os.path.exists(done_directory):
         os.mkdir(done_directory)
     single_done_dir = os.path.join(done_directory, datetime.datetime.now().strftime('%Y-%m-%d--%H-%M-%S--%f'))
