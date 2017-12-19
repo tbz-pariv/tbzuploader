@@ -65,6 +65,10 @@ class TestCase(unittest.TestCase):
     def test_relative_url_to_absolute_url__without_scheme_with_user_and_password(self):
         self.assertEqual('http://google.com/abc', relative_url_to_absolute_url('http://user:pwd@google.com/xyz', '/abc'))
 
+    def test_relative_url_to_absolute_url__without_scheme_with_file_url(self):
+        self.assertEqual('file:///abc', relative_url_to_absolute_url('http://user:pwd@google.com/xyz', 'file:///abc'))
+
+
     def test_upload_list_of_pairs__single__success(self):
         directory = tempfile.mkdtemp()
         with open(os.path.join(directory, 'foo.txt'), 'wt') as fd:

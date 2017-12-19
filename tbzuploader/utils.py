@@ -47,7 +47,7 @@ def upload_list_of_pairs__single(directory, url, pairs, done_directory, verify):
 
 
 def is_absolute_url(url):
-    return bool(urlparse.urlparse(url).netloc)
+    return bool(urlparse.urlparse(url).scheme)
 
 
 def relative_url_to_absolute_url(request_url, response_location):
