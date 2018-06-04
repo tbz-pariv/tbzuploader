@@ -24,7 +24,8 @@ Example
 
     user@host> tbzuploader my-local-dir https://user:password@myhost/upload-files
 
-This will upload files from directory "my-local-dir" to the specified URL.
+This will upload files from directory "my-local-dir" to the specified URL. If the upload was successful (server returned http status "201 created"),
+then the local files in "my-local-dir" get moved to "my-local-dir/done".
 
 Usage
 =====
