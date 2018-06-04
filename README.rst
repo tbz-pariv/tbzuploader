@@ -20,7 +20,7 @@ The first upload should take a.pdf and a.xml, and the second upload b.pdf and b.
 Example
 =======
 
-Example::
+::
 
     user@host> tbzuploader my-local-dir https://user:password@myhost/upload-files
 
@@ -29,7 +29,7 @@ This will upload files from directory "my-local-dir" to the specified URL.
 Usage
 =====
 
-Usage::
+::
 
     usage: tbzuploader [-h] [--patterns= LIST_OF_PATTERNS]
                        [--min-age-seconds MIN_AGE_SECONDS]
