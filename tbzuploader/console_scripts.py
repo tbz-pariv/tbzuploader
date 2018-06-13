@@ -5,11 +5,24 @@ import argparse
 import logging
 import os
 
+import sys
 from tbzuploader import utils
 
 default_min_age_seconds=60
 
+
+def set_up_logging(level=logging.INFO):
+    global logger
+    root_logger=logging.getLogger()
+    root_logger.setLevel(level)
+    handler=logging.StreamHandler(sys.stdout)
+    handler.setFormatter(logging.Formatter('%(asctime)s %(name)s: %(levelname)-8s [%(process)d] %(message)s', '%Y-%m-%d %H:%M:%S'))
+    root_logger.addHandler(handler)
+    logger=logging.getLogger(os.path.basename(sys.argv[0]))
+
+
 def main():
+    set_up_logging()
     parser = argparse.ArgumentParser()
     parser.add_argument('local_directory')
     parser.add_argument('url', help='URL can contain http-basic-auth like this: https://apiuser:mypwd@example.com/input-process-output/')

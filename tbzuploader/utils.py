@@ -18,6 +18,7 @@ from collections import defaultdict
 
 import requests
 
+logger = logging.getLogger(__name__)
 
 def upload_list_of_pairs(directory, url, list_of_pairs, done_directory, verify=True):
     for pairs in list_of_pairs:
@@ -38,12 +39,12 @@ def upload_list_of_pairs__single(directory, url, pairs, done_directory, verify):
             open_file.close()
     if response.status_code == 201:
         return upload_list_of_pairs__single__success(directory, url, pairs, done_directory, response)
-    print('Failed: %s' % pairs)
-    print('%s %s %s' % (response,
+    logger.warn('Failed: %s' % pairs)
+    logger.warn('%s %s %s' % (response,
                         httplib.responses.get(response.status_code),
                         url, # TODO remove password from URL. See https://stackoverflow.com/questions/46905367/remove-password-from-url
                         ))
-    print(response.content)
+    logger.warn(response.content)
 
 
 def is_absolute_url(url):
