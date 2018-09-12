@@ -2,6 +2,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import glob
+import io
 import tempfile
 import unittest
 
@@ -13,6 +14,7 @@ from tbzuploader.utils import relative_url_to_absolute_url, upload_list_of_pairs
 
 class DummyResponse(object):
     headers=dict()
+    status_code=201
 
 class TestCase(unittest.TestCase):
     is_source_from_tbz = True
@@ -79,3 +81,20 @@ class TestCase(unittest.TestCase):
         pairs=['foo.txt']
         upload_list_of_pairs__single__success(directory, url, pairs, done_directory, response)
         self.assertEqual(['foo.txt'], [os.path.basename(file_name) for file_name in glob.glob(os.path.join(done_directory, '*', 'foo.txt'))])
+
+    def test_upload_list_of_pairs__single(self):
+        def my_post(url, files, allow_redirects, verify):
+            return DummyResponse()
+        directory = tempfile.mkdtemp(prefix='test_upload_list_of_pairs__single_')
+        file_a = os.path.join(directory, 'foo.a')
+        with io.open(file_a, 'wt') as fd:
+            fd.write('a')
+        file_b = os.path.join(directory, 'foo.b')
+        with io.open(file_b, 'wt') as fd:
+            fd.write('b')
+        done_dir = os.path.join(directory, 'done')
+        with mock.patch('requests.post', my_post):
+            single_done_dir = utils.upload_list_of_pairs__single(directory, 'https://example.com', (file_a, file_b), done_dir, verify=False)
+        self.assertFalse(set(os.listdir(directory)) - set(['done']))
+        self.assertTrue(os.path.exists(os.path.join(single_done_dir, 'foo.a')), done_dir)
+        self.assertTrue(os.path.exists(os.path.join(single_done_dir, 'foo.b')), done_dir)

@@ -70,6 +70,7 @@ def upload_list_of_pairs__single__success(directory, url, pairs, done_directory,
     print('Moved files to: %s' % single_done_dir)
     with open(os.path.join(single_done_dir, 'success.txt'), 'wt') as fd:
         fd.write('%s\n' % url)
+    return single_done_dir
 
 
 def get_pairs_from_directory(directory, list_of_patterns):
