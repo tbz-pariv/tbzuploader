@@ -31,16 +31,18 @@ Usage
 =====
 
 ::
-
     usage: tbzuploader [-h] [--patterns= LIST_OF_PATTERNS]
                        [--min-age-seconds MIN_AGE_SECONDS]
                        [--done-directory DONE_DIRECTORY]
-                       [--no-ssl-cert-verification]
+                       [--all-files-in-one-request] [--all-files-in-n-requests]
+                       [--no-ssl-cert-verification] [--dry-run]
                        local_directory url
 
     positional arguments:
       local_directory
-      url
+      url                   URL can contain http-basic-auth like this:
+                            https://apiuser:mypwd@example.com/input-process-
+                            output/
 
     optional arguments:
       -h, --help            show this help message and exit
@@ -54,7 +56,17 @@ Usage
       --done-directory DONE_DIRECTORY
                             files get moved to this directory after successful
                             upload. Defaults to {local_directory}/done
+      --all-files-in-one-request
+                            Upload all files in one request (if you give not
+                            --pattern). Upload all matching files in one request
+                            (if you give --pattern)
+      --all-files-in-n-requests
+                            Upload all files in N requests (if you give not
+                            --pattern). Upload all matching files in N requests
+                            (if you give --pattern)
       --no-ssl-cert-verification
+      --dry-run             Do not upload. Just print the pair of files which
+                            would get uploaded together
 
 Install
 =======

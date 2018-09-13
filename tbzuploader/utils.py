@@ -73,23 +73,67 @@ def upload_list_of_pairs__single__success(directory, url, pairs, done_directory,
     return single_done_dir
 
 
-def get_pairs_from_directory(directory, list_of_patterns):
+def get_pairs_from_directory(directory, list_of_patterns, all_files_in_one_request=False, all_files_in_n_requests=False):
+    assert not (all_files_in_one_request and all_files_in_n_requests)
     if not list_of_patterns:
-        return get_pairs_from_directory__all_files__no_pairs(directory)
+        if all_files_in_one_request:
+            return get_pairs_from_directory__all_files__one_request(directory)
+        else:
+            return get_pairs_from_directory__all_files__n_requests(directory)
+    if all_files_in_one_request:
+        return get_pairs_from_directory__all_files__one_request(directory, list_of_patterns)
+    if all_files_in_n_requests:
+        return get_pairs_from_directory__all_files__n_requests(directory, list_of_patterns)
+
     pairs = []
     for patterns in list_of_patterns:
         pairs.extend(get_pairs_from_directory_single_pattern(directory, patterns))
     check_duplicates(pairs)
     return pairs
 
-def get_pairs_from_directory__all_files__no_pairs(directory):
+def get_pairs_from_directory__all_files__n_requests(directory):
     files=[]
     for file_name in sorted(os.listdir(directory)):
         file_abs = os.path.join(directory, file_name)
         if not os.path.isfile(file_abs):
             continue
-        files.append(file_name)
-    return [(item,) for item in files]
+        files.append((file_name,))
+    return files
+
+def join_list_of_patterns_to_one_pattern(list_of_patterns):
+    all_patterns = []
+    for patterns in list_of_patterns:
+        all_patterns.extend(patterns.split())
+    return [glob_pattern_to_regex_pattern(pattern) for pattern in all_patterns]
+
+
+def get_pairs_from_directory__all_files__one_request(directory, list_of_patterns=[]):
+    if list_of_patterns:
+        regex_patterns = join_list_of_patterns_to_one_pattern(list_of_patterns)
+    files=[]
+    for base_name in sorted(os.listdir(directory)):
+        file_abs = os.path.join(directory, base_name)
+        if not os.path.isfile(file_abs):
+            continue
+        if list_of_patterns and not star_part_or_none(base_name, regex_patterns):
+            continue
+        files.append(base_name)
+    if not files:
+        return []
+    return [tuple(files)]
+
+def get_pairs_from_directory__all_files__n_requests(directory, list_of_patterns=[]):
+    if list_of_patterns:
+        regex_patterns = join_list_of_patterns_to_one_pattern(list_of_patterns)
+    files=[]
+    for base_name in sorted(os.listdir(directory)):
+        file_abs = os.path.join(directory, base_name)
+        if not os.path.isfile(file_abs):
+            continue
+        if list_of_patterns and not star_part_or_none(base_name, regex_patterns):
+            continue
+        files.append((base_name,))
+    return files
 
 def check_duplicates(pairs):
     single_list = []
@@ -115,15 +159,22 @@ def get_pairs_from_directory_single_pattern(directory, patterns):
     list_of_files = list_directory(directory)
     pairs = []
     for base_name in list_of_files:
-        for regex in regex_patterns:
-            match = regex.match(base_name)
-            if match:
-                glob_sub_part_of_file_name = match.group(1)
-                matches[glob_sub_part_of_file_name].append(base_name)
+        glob_sub_part_of_file_name = star_part_or_none(base_name, regex_patterns)
+        if not glob_sub_part_of_file_name:
+            continue
+        matches[glob_sub_part_of_file_name].append(base_name)
     for glob_sub_part_of_file_name, base_names in sorted(matches.items()):
         if len(base_names) == len(regex_patterns):
             pairs.append(base_names)
     return pairs
+
+def star_part_or_none(base_name, regex_patterns):
+    for regex in regex_patterns:
+        match = regex.match(base_name)
+        if not match:
+            continue
+        return match.group(1)
+
 
 
 def filter_files_which_are_too_young(directory, list_of_pairs, min_age_seconds):
