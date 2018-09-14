@@ -115,4 +115,3 @@ About
 
 Developed for you products `modwork <http://www.tbz-pariv.de/produkte/modwork>`_ and `modarch <http://www.tbz-pariv.de/produkte/modarch>`_.
 
-
