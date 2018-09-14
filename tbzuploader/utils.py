@@ -39,8 +39,8 @@ def upload_list_of_pairs__single(directory, url, pairs, done_directory, verify):
             open_file.close()
     if response.status_code == 201:
         return upload_list_of_pairs__single__success(directory, url, pairs, done_directory, response)
-    logger.warn('Failed: %s' % pairs)
-    logger.warn('%s %s %s' % (response,
+    logger.warn('Failed: {}'.format(pairs))
+    logger.warn('{} {} {}'.format(response,
                         httplib.responses.get(response.status_code),
                         url, # TODO remove password from URL. See https://stackoverflow.com/questions/46905367/remove-password-from-url
                         ))
