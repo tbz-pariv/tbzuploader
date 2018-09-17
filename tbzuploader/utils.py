@@ -21,8 +21,12 @@ import requests
 logger = logging.getLogger(__name__)
 
 def upload_list_of_pairs(directory, url, list_of_pairs, done_directory, verify=True):
+    success=True
     for pairs in list_of_pairs:
-        upload_list_of_pairs__single(directory, url, pairs, done_directory, verify)
+        done_dir = upload_list_of_pairs__single(directory, url, pairs, done_directory, verify)
+        if not done_dir:
+            success = False
+    return success
 
 
 def upload_list_of_pairs__single(directory, url, pairs, done_directory, verify):
@@ -45,6 +49,7 @@ def upload_list_of_pairs__single(directory, url, pairs, done_directory, verify):
                         url, # TODO remove password from URL. See https://stackoverflow.com/questions/46905367/remove-password-from-url
                         ))
     logger.warn(response.content)
+    return None
 
 
 def is_absolute_url(url):

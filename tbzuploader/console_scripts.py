@@ -60,6 +60,9 @@ def main():
         for pairs in list_of_pairs:
             print('I would upload this in one request: {}'.format(' '.join(pairs)))
         return
-    utils.upload_list_of_pairs(args.local_directory, args.url, list_of_pairs, done_directory, verify=not args.no_ssl_cert_verification)
+    success = utils.upload_list_of_pairs(args.local_directory, args.url, list_of_pairs, done_directory, verify=not args.no_ssl_cert_verification)
+    if not success:
+        sys.exit(1)
+
 
 
