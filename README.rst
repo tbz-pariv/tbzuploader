@@ -110,6 +110,18 @@ Testing::
     pytest # all test still ok?
     .... I am waiting for your pull request :-)
 
+Protocol for resumable uploads 
+==============================
+
+Unfortunately, tbzuploader does not support resumable uploads up to now.
+
+There is already a spec for it. 
+
+It would very cool if tbzuploader could support it: https://tus.io/
+
+Pull requests are welcome.
+
+
 About
 =====
 
