@@ -41,6 +41,7 @@ def main():
                         help='Upload all files in N requests (if you give not --pattern). Upload all matching files in N requests (if you give --pattern)',
                         action='store_true')
     parser.add_argument('--no-ssl-cert-verification', action='store_true')
+    parser.add_argument('--ca-bundle')
     parser.add_argument('--dry-run', help='Do not upload. Just print the pair of files which would get uploaded together',
                         action='store_true')
     args = parser.parse_args()
@@ -51,6 +52,8 @@ def main():
         os.mkdir(done_directory)
     if args.all_files_in_one_request and args.all_files_in_n_requests:
         raise ValueError('--all-files-in-one-request and --all-files-in-n-requests are mutual exclusive')
+    if args.ca_bundle and args.no_ssl_cert_verification:
+        raise ValueError('''You can't use --ca-bundle and --no-ssl-cert-verification together.''')
     list_of_pairs = utils.get_pairs_from_directory(args.local_directory, args.list_of_patterns,
                                                    all_files_in_one_request=args.all_files_in_one_request,
                                                    all_files_in_n_requests=args.all_files_in_n_requests)
@@ -62,6 +65,12 @@ def main():
         for pairs in list_of_pairs:
             print('I would upload this in one request: {}'.format(' '.join(pairs)))
         return
-    success = utils.upload_list_of_pairs(args.local_directory, args.url, list_of_pairs, done_directory, verify=not args.no_ssl_cert_verification)
+    success = utils.upload_list_of_pairs(
+        args.local_directory,
+        args.url,
+        list_of_pairs,
+        done_directory,
+        verify=args.ca_bundle if args.ca_bundle else not args.no_ssl_cert_verification
+    )
     if not success:
         sys.exit(1)
