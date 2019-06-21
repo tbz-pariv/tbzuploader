@@ -8,17 +8,17 @@ import os
 import sys
 from tbzuploader import utils
 
-default_min_age_seconds=60
+default_min_age_seconds = 60
 
 
 def set_up_logging(level=logging.INFO):
     global logger
-    root_logger=logging.getLogger()
+    root_logger = logging.getLogger()
     root_logger.setLevel(level)
-    handler=logging.StreamHandler(sys.stdout)
+    handler = logging.StreamHandler(sys.stdout)
     handler.setFormatter(logging.Formatter('%(asctime)s %(name)s: %(levelname)-8s [%(process)d] %(message)s', '%Y-%m-%d %H:%M:%S'))
     root_logger.addHandler(handler)
-    logger=logging.getLogger(os.path.basename(sys.argv[0]))
+    logger = logging.getLogger(os.path.basename(sys.argv[0]))
 
 
 def main():
@@ -34,17 +34,19 @@ def main():
     parser.add_argument('--done-directory', help='files get moved to this directory after successful upload. Defaults to {local_directory}/done',
                         dest='done_directory')
 
-    parser.add_argument('--all-files-in-one-request', help='Upload all files in one request (if you give not --pattern). Upload all matching files in one request (if you give --pattern)',
+    parser.add_argument('--all-files-in-one-request',
+                        help='Upload all files in one request (if you give not --pattern). Upload all matching files in one request (if you give --pattern)',
                         action='store_true')
-    parser.add_argument('--all-files-in-n-requests', help='Upload all files in N requests (if you give not --pattern). Upload all matching files in N requests (if you give --pattern)',
+    parser.add_argument('--all-files-in-n-requests',
+                        help='Upload all files in N requests (if you give not --pattern). Upload all matching files in N requests (if you give --pattern)',
                         action='store_true')
     parser.add_argument('--no-ssl-cert-verification', action='store_true')
     parser.add_argument('--dry-run', help='Do not upload. Just print the pair of files which would get uploaded together',
                         action='store_true')
     args = parser.parse_args()
-    done_directory=args.done_directory
+    done_directory = args.done_directory
     if not done_directory:
-        done_directory=os.path.join(args.local_directory, b'done')
+        done_directory = os.path.join(args.local_directory, b'done')
     if not os.path.exists(done_directory):
         os.mkdir(done_directory)
     if args.all_files_in_one_request and args.all_files_in_n_requests:
@@ -63,6 +65,3 @@ def main():
     success = utils.upload_list_of_pairs(args.local_directory, args.url, list_of_pairs, done_directory, verify=not args.no_ssl_cert_verification)
     if not success:
         sys.exit(1)
-
-
-

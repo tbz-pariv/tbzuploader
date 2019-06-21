@@ -5,6 +5,7 @@ import httplib
 import urlparse
 
 from future import standard_library
+
 standard_library.install_aliases()
 import collections
 import datetime
@@ -20,8 +21,9 @@ import requests
 
 logger = logging.getLogger(__name__)
 
+
 def upload_list_of_pairs(directory, url, list_of_pairs, done_directory, verify=True):
-    success=True
+    success = True
     for pairs in list_of_pairs:
         done_dir = upload_list_of_pairs__single(directory, url, pairs, done_directory, verify)
         if not done_dir:
@@ -35,7 +37,7 @@ def upload_list_of_pairs__single(directory, url, pairs, done_directory, verify):
         open_file_list.append(('files', open(os.path.join(directory, file_name), 'rb')))
     try:
         response = requests.post(url, files=open_file_list, allow_redirects=False,
-                             verify=verify)
+                                 verify=verify)
     except requests.exceptions.SSLError as exc:
         raise ValueError('%s. Use --no-ssl-cert-verification if you want ....' % exc)
     finally:
@@ -44,10 +46,11 @@ def upload_list_of_pairs__single(directory, url, pairs, done_directory, verify):
     if response.status_code == 201:
         return upload_list_of_pairs__single__success(directory, url, pairs, done_directory, response)
     logger.warn('Failed: {}'.format(pairs))
-    logger.warn('{} {} {}'.format(response,
-                        httplib.responses.get(response.status_code),
-                        url, # TODO remove password from URL. See https://stackoverflow.com/questions/46905367/remove-password-from-url
-                        ))
+    logger.warn('{} {} {}'.format(
+        response,
+        httplib.responses.get(response.status_code),
+        url,  # TODO remove password from URL. See https://stackoverflow.com/questions/46905367/remove-password-from-url
+    ))
     logger.warn(response.content)
     return None
 
@@ -63,6 +66,7 @@ def relative_url_to_absolute_url(request_url, response_location):
         return response_location
     parsed_url = urllib.parse.urlparse(request_url)
     return '{}://{}{}'.format(parsed_url.scheme, parsed_url.netloc.split('@')[-1], response_location)
+
 
 def upload_list_of_pairs__single__success(directory, url, pairs, done_directory, response):
     print('Success :-) %s' % (relative_url_to_absolute_url(url, response.headers.get('Location'))))
@@ -96,14 +100,16 @@ def get_pairs_from_directory(directory, list_of_patterns, all_files_in_one_reque
     check_duplicates(pairs)
     return pairs
 
+
 def get_pairs_from_directory__all_files__n_requests(directory):
-    files=[]
+    files = []
     for file_name in sorted(os.listdir(directory)):
         file_abs = os.path.join(directory, file_name)
         if not os.path.isfile(file_abs):
             continue
         files.append((file_name,))
     return files
+
 
 def join_list_of_patterns_to_one_pattern(list_of_patterns):
     all_patterns = []
@@ -115,7 +121,7 @@ def join_list_of_patterns_to_one_pattern(list_of_patterns):
 def get_pairs_from_directory__all_files__one_request(directory, list_of_patterns=[]):
     if list_of_patterns:
         regex_patterns = join_list_of_patterns_to_one_pattern(list_of_patterns)
-    files=[]
+    files = []
     for base_name in sorted(os.listdir(directory)):
         file_abs = os.path.join(directory, base_name)
         if not os.path.isfile(file_abs):
@@ -127,10 +133,11 @@ def get_pairs_from_directory__all_files__one_request(directory, list_of_patterns
         return []
     return [tuple(files)]
 
+
 def get_pairs_from_directory__all_files__n_requests(directory, list_of_patterns=[]):
     if list_of_patterns:
         regex_patterns = join_list_of_patterns_to_one_pattern(list_of_patterns)
-    files=[]
+    files = []
     for base_name in sorted(os.listdir(directory)):
         file_abs = os.path.join(directory, base_name)
         if not os.path.isfile(file_abs):
@@ -139,6 +146,7 @@ def get_pairs_from_directory__all_files__n_requests(directory, list_of_patterns=
             continue
         files.append((base_name,))
     return files
+
 
 def check_duplicates(pairs):
     single_list = []
@@ -173,13 +181,13 @@ def get_pairs_from_directory_single_pattern(directory, patterns):
             pairs.append(base_names)
     return pairs
 
+
 def star_part_or_none(base_name, regex_patterns):
     for regex in regex_patterns:
         match = regex.match(base_name)
         if not match:
             continue
         return match.group(1)
-
 
 
 def filter_files_which_are_too_young(directory, list_of_pairs, min_age_seconds):
