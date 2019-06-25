@@ -14,7 +14,9 @@ class TestCase(unittest.TestCase):
         self.assertRaises(ValueError, console_scripts.main)
 
         with mock.patch('tbzuploader.utils.upload_list_of_pairs') as upload_mock:
-            sys.argv = ['tbzuploader', '--ca-bundle', 'test.crt', './', 'http://www.example.com']
-            console_scripts.main()
-            self.assertIn('verify', upload_mock.call_args.kwargs)
-            self.assertEqual('test.crt', upload_mock.call_args.kwargs['verify'])
+            with mock.patch('tbzuploader.utils.get_pairs_from_directory', return_value=[['test.txt']]):
+                with mock.patch('tbzuploader.utils.get_file_age', return_value=60):
+                    sys.argv = ['tbzuploader', '--ca-bundle', 'test.crt', './', 'http://www.example.com']
+                    console_scripts.main()
+                    self.assertIn('verify', upload_mock.call_args.kwargs)
+                    self.assertEqual('test.crt', upload_mock.call_args.kwargs['verify'])
