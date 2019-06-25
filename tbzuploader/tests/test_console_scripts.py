@@ -18,5 +18,6 @@ class TestCase(unittest.TestCase):
                 with mock.patch('tbzuploader.utils.get_file_age', return_value=60):
                     sys.argv = ['tbzuploader', '--ca-bundle', 'test.crt', './', 'http://www.example.com']
                     console_scripts.main()
-                    self.assertIn('verify', upload_mock.call_args.kwargs)
-                    self.assertEqual('test.crt', upload_mock.call_args.kwargs['verify'])
+                    args, kwargs = upload_mock.call_args
+                    self.assertIn('verify', kwargs, msg=kwargs)
+                    self.assertEqual('test.crt', kwargs['verify'])
