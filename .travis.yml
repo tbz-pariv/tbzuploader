@@ -13,13 +13,13 @@ after_success:
 - git config --global user.email "bumpversion-after-ci@example.com"
 - git config --global user.name "Bumpversion after CI"
 - bumpversion --verbose minor
-- chmod 600 travis_deploy_key
+- chmod 600 tbz_deploy_key
 - eval `ssh-agent -s`
-- ssh-add travis_deploy_key
+- ssh-add tbz_deploy_key
 - git config --global push.default simple
 - git remote add deploy $(git remote -v | sed -nre 's#^origin.*https://([^/]*)/([^
   ]*) *.*push.*#git@\1:\2#p')
 - git push deploy HEAD:master
 - python setup.py sdist
 - pip install twine
-- twine upload --config-file .pypirc-bot dist/*
+- twine upload --config-file .pypirc dist/*
