@@ -1,5 +1,5 @@
-.. image:: https://travis-ci.org/guettli/tbzuploader.svg?branch=master
-    :target: https://travis-ci.org/guettli/tbzuploader
+.. image:: https://travis-ci.org/tbz-pariv/tbzuploader.svg?branch=master
+    :target: https://travis-ci.org/tbz-pariv/tbzuploader
 
 
 tbzuploader

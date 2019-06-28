@@ -5,7 +5,7 @@ setuptools.setup(
     version='2019.2.0',
     license='Apache Software License 2.0',
     long_description=open('README.rst').read(),
-    url='https://github.com/guettli/tbzuploader',
+    url='https://github.com/tbz-pariv/tbzuploader',
     packages=setuptools.find_packages(),
     zip_safe=False,
     install_requires=[
@@ -15,8 +15,8 @@ setuptools.setup(
 
     include_package_data=True,
 
-    author='Thomas Guettler',
-    author_email='info.reprec@thomas-guettler.de',
+    author='TBZ-PARIV GmbH',
+    author_email='info@tbz-pariv.de',
 
     entry_points={
         'console_scripts': [
