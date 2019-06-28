@@ -17,6 +17,9 @@ import time
 import urllib.parse
 from collections import defaultdict
 
+import requests.packages.urllib3
+requests.packages.urllib3.disable_warnings()
+
 import requests
 
 logger = logging.getLogger(__name__)
