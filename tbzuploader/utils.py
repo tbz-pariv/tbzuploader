@@ -72,14 +72,14 @@ def relative_url_to_absolute_url(request_url, response_location):
 
 
 def upload_list_of_pairs__single__success(directory, url, pairs, done_directory, response):
-    print('Success :-) %s' % (relative_url_to_absolute_url(url, response.headers.get('Location'))))
+    logger.info('Success :-) %s' % (relative_url_to_absolute_url(url, response.headers.get('Location'))))
     if not os.path.exists(done_directory):
         os.mkdir(done_directory)
     single_done_dir = os.path.join(done_directory, datetime.datetime.now().strftime('%Y-%m-%d--%H-%M-%S--%f'))
     os.mkdir(single_done_dir)
     for file_name in pairs:
         shutil.move(os.path.join(directory, file_name), single_done_dir)
-    print('Moved files to: %s' % single_done_dir)
+    logger.info('Moved files to: %s' % single_done_dir)
     with open(os.path.join(single_done_dir, 'success.txt'), 'wt') as fd:
         fd.write('%s\n' % url)
     return single_done_dir
