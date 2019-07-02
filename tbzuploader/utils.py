@@ -5,7 +5,10 @@ from future import standard_library
 
 standard_library.install_aliases()
 
-import httplib
+try:
+    from httplib import responses
+except ImportError:
+    from http.client import responses
 import urlparse
 import collections
 import datetime
@@ -51,7 +54,7 @@ def upload_list_of_pairs__single(directory, url, pairs, done_directory, verify):
     logger.warn('Failed: {}'.format(pairs))
     logger.warn('{} {} {}'.format(
         response,
-        httplib.responses.get(response.status_code),
+        responses.get(response.status_code),
         url,  # TODO remove password from URL. See https://stackoverflow.com/questions/46905367/remove-password-from-url
     ))
     logger.warn(response.content)
