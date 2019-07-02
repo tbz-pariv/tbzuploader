@@ -5,11 +5,12 @@ from future import standard_library
 
 standard_library.install_aliases()
 
-try:
+if standard_library.PY2:
     from httplib import responses
-except ImportError:
+    from urlparse import urlparse
+elif standard_library.PY3:
     from http.client import responses
-import urlparse
+    from urllib.parse import urlparse
 import collections
 import datetime
 import logging
@@ -17,7 +18,7 @@ import os
 import re
 import shutil
 import time
-import urllib.parse
+
 from collections import defaultdict
 
 import requests.packages.urllib3
@@ -62,7 +63,7 @@ def upload_list_of_pairs__single(directory, url, pairs, done_directory, verify):
 
 
 def is_absolute_url(url):
-    return bool(urlparse.urlparse(url).scheme)
+    return bool(urlparse(url).scheme)
 
 
 def relative_url_to_absolute_url(request_url, response_location):
@@ -70,7 +71,7 @@ def relative_url_to_absolute_url(request_url, response_location):
         return request_url
     if is_absolute_url(response_location):
         return response_location
-    parsed_url = urllib.parse.urlparse(request_url)
+    parsed_url = urlparse(request_url)
     return '{}://{}{}'.format(parsed_url.scheme, parsed_url.netloc.split('@')[-1], response_location)
 
 
