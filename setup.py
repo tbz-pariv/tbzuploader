@@ -9,7 +9,8 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     zip_safe=False,
     install_requires=[
-        'requests',
+        'requests[security] ; python_version<="2.7.9"',
+        'requests ; python_version>"2.7.9"',
         'future',
     ],
 
