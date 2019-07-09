@@ -125,6 +125,6 @@ Pull requests are welcome.
 About
 =====
 
-Developed for you products `modwork <http://www.tbz-pariv.de/produkte/modwork>`_ and `modarch <http://www.tbz-pariv.de/produkte/modarch>`_.
+Developed for our products `modwork <http://www.tbz-pariv.de/produkte/modwork>`_, `modarch <http://www.tbz-pariv.de/produkte/modarch>`_ and `modlink <https://www.tbz-pariv.de/produkte/modlink/modlink-intro>`_.
 
 
