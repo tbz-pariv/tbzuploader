@@ -2,20 +2,56 @@
     :target: https://travis-ci.org/tbz-pariv/tbzuploader
 
 
-tbzuploader
-===========
+tbzuploader - Generic HTTP Uploading
+====================================
 
-Generic http upload tool.
+A lot of daily work is based on regular files.
 
-If the http upload was successfull, local files get moved to a "done" sub directory.
+tbzuploader is a tool which detects uploadable files and posts them via HTTP while conforming to the
+standardized `HTTP Status Codes <https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#2xx_Success>`_.
 
-The upload is considered successfull by tbzuploader if the servers replies with http status `201 Created <https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#2xx_Success>`_
 
-Additional features: Handles pairs of files.
+Upload Protocol
+===============
+
+tbzuploader conforms to the generally accepted upload protocol.
+
+
+201 Created
+***********
+
+If the HTTP upload is successful, the server responds with "201 Created".
+The files will then be moved to a "done" directory.
+
+
+400 Bad Request
+***************
+
+If the HTTP upload is not successful and it is a client error (such as wrong files or corrupted files),
+the server responds with "400 Bad Request".
+The files will then be moved to a "failed" directory.
+
+In case you want to inform an admin, specify an email address which gets notified in that case, because
+failed files won't be retried.
+
+
+500 Internal Server Error and others
+************************************
+
+If the HTTP upload was not successful (such as an login page, outage, programming error or overload),
+the server responds with other status codes (such as 500 Internal Server Error).
+tbzuploader will then retry to post the files next time.
+
+
+Features
+========
+
+Handles pairs or triplets of files.
 
 For example you have four files: a.pdf, a.xml, b.pdf, b.xml
 
 The first upload should take a.pdf and a.xml, and the second upload b.pdf and b.xml. See the docs for `--patterns`.
+
 
 Example
 =======
@@ -24,8 +60,13 @@ Example
 
     user@host> tbzuploader my-local-dir https://user:password@myhost/upload-files
 
-This will upload files from directory "my-local-dir" to the specified URL. If the upload was successful (server returned http status "201 created"),
+This will upload files from directory "my-local-dir" to the specified URL.
+
+If the upload was **successful** (server returned http status "201 Created"),
 then the local files in "my-local-dir" get moved to "my-local-dir/done".
+
+If the upload **failed** because the server rejects the files (400 Bad Request),
+then the local files in "my-local-dir" get moved to "my-local-dir/failed".
 
 Usage
 =====
@@ -120,11 +161,3 @@ There is already a spec for it.
 It would very cool if tbzuploader could support it: https://tus.io/
 
 Pull requests are welcome.
-
-
-About
-=====
-
-Developed for our products `modwork <http://www.tbz-pariv.de/produkte/modwork>`_, `modarch <http://www.tbz-pariv.de/produkte/modarch>`_ and `modlink <https://www.tbz-pariv.de/produkte/modlink/modlink-intro>`_.
-
-
