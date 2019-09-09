@@ -35,6 +35,10 @@ def main():
                         dest='done_directory')
     parser.add_argument('--failed-directory', help='files get moved to this directory after failed upload due to broken files. Defaults to {local_directory}/failed',
                         dest='failed_directory')
+    parser.add_argument('--smtp-server', help='SMTP server which sends mails in case broken files were tried to be uploaded.',
+                        dest='smtp_server')
+    parser.add_argument('--mail-to', help='Recipient of mails in case broken files were tried to be uploaded.',
+                        dest='mail_to')
 
     parser.add_argument('--all-files-in-one-request',
                         help='Upload all files in one request (if you give not --pattern). Upload all matching files in one request (if you give --pattern)',
@@ -74,6 +78,8 @@ def main():
         list_of_pairs,
         done_directory,
         failed_directory,
+        args.smtp_server,
+        args.mail_to,
         verify=args.ca_bundle if args.ca_bundle else not args.no_ssl_cert_verification
     )
     if not success:

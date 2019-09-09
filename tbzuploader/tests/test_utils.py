@@ -105,7 +105,7 @@ class TestCase(unittest.TestCase):
         with mock.patch('requests.post', my_post):
             single_done_dir = utils.upload_list_of_pairs__single(directory, 'https://example.com',
                                                                  (os.path.join(directory, 'foo.a'), os.path.join(directory, 'bar.a')),
-                                                                 done_dir, failed_dir, verify=False)
+                                                                 done_dir, failed_dir, smtp_server=None, mail_to=None, verify=False)
         self.assertEqual(['bar.b', 'done', 'foo.b'], [os.path.basename(f) for f in sorted(os.listdir(directory))])
         self.assertTrue(os.path.exists(os.path.join(single_done_dir, 'foo.a')), done_dir)
         self.assertTrue(os.path.exists(os.path.join(single_done_dir, 'bar.a')), done_dir)
@@ -118,7 +118,7 @@ class TestCase(unittest.TestCase):
         url = 'https://user:password@example.com/path'
         response = Response400()
         pairs = ['foo.txt']
-        upload_list_of_pairs__single__bad_request(directory, url, pairs, failed_directory, response)
+        upload_list_of_pairs__single__bad_request(directory, url, pairs, failed_directory, None, None, response)
         self.assertEqual(['foo.txt'], [os.path.basename(file_name) for file_name in glob.glob(os.path.join(failed_directory, '*', 'foo.txt'))])
 
     def test_upload_list_of_pairs__single__failed_integration(self):
@@ -131,7 +131,7 @@ class TestCase(unittest.TestCase):
         with mock.patch('requests.post', my_post):
             single_done_dir = utils.upload_list_of_pairs__single(directory, 'https://example.com',
                                                                  (os.path.join(directory, 'foo.a'), os.path.join(directory, 'bar.a')),
-                                                                 done_dir, failed_dir, verify=False)
+                                                                 done_dir, failed_dir, smtp_server=None, mail_to=None, verify=False)
         self.assertEqual(['bar.b', 'failed', 'foo.b'], [os.path.basename(f) for f in sorted(os.listdir(directory))])
         self.assertTrue(os.path.exists(os.path.join(single_done_dir, 'foo.a')), done_dir)
         self.assertTrue(os.path.exists(os.path.join(single_done_dir, 'bar.a')), done_dir)

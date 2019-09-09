@@ -11,6 +11,7 @@ if standard_library.PY2:
 elif standard_library.PY3:
     from http.client import responses
     from urllib.parse import urlparse
+import smtplib
 import collections
 import datetime
 import logging
@@ -26,16 +27,16 @@ import requests
 logger = logging.getLogger(__name__)
 
 
-def upload_list_of_pairs(directory, url, list_of_pairs, done_directory, failed_directory, verify=True):
+def upload_list_of_pairs(directory, url, list_of_pairs, done_directory, failed_directory, smtp_server=None, mail_to=None, verify=True):
     success = True
     for pairs in list_of_pairs:
-        done_dir = upload_list_of_pairs__single(directory, url, pairs, done_directory, failed_directory, verify)
+        done_dir = upload_list_of_pairs__single(directory, url, pairs, done_directory, failed_directory, smtp_server, mail_to, verify)
         if not done_dir:
             success = False
     return success
 
 
-def upload_list_of_pairs__single(directory, url, pairs, done_directory, failed_directory, verify):
+def upload_list_of_pairs__single(directory, url, pairs, done_directory, failed_directory, smtp_server, mail_to, verify):
     open_file_list = []
     for file_name in pairs:
         open_file_list.append(('files', open(os.path.join(directory, file_name), 'rb')))
@@ -49,7 +50,7 @@ def upload_list_of_pairs__single(directory, url, pairs, done_directory, failed_d
     if response.status_code == 201:
         return upload_list_of_pairs__single__success(directory, url, pairs, done_directory, response)
     if response.status_code == 400:
-        return upload_list_of_pairs__single__bad_request(directory, url, pairs, failed_directory, response)
+        return upload_list_of_pairs__single__bad_request(directory, url, pairs, failed_directory, smtp_server, mail_to, response)
     logger.warn('Server failed to upload: {}'.format(pairs))
     logger.warn('{} {} {}'.format(
         response,
@@ -87,7 +88,7 @@ def upload_list_of_pairs__single__success(directory, url, pairs, done_directory,
     return single_done_dir
 
 
-def upload_list_of_pairs__single__bad_request(directory, url, pairs, failed_directory, response):
+def upload_list_of_pairs__single__bad_request(directory, url, pairs, failed_directory, smtp_server, mail_to, response):
     logger.info('400 Bad Request %s' % (relative_url_to_absolute_url(url, response.headers.get('Location'))))
     if not os.path.exists(failed_directory):
         os.mkdir(failed_directory)
@@ -98,6 +99,12 @@ def upload_list_of_pairs__single__bad_request(directory, url, pairs, failed_dire
     logger.info('moved files to: %s' % single_failed_dir)
     with open(os.path.join(single_failed_dir, 'failed.txt'), 'wt') as fd:
         fd.write('%s\n' % url)
+
+    if smtp_server and mail_to:
+        server = smtplib.SMTP(smtp_server)
+        server.sendmail('HTTP Uploader <HTTPUploader>', mail_to, failed_mail_template.format(url=url, no_files=len(pairs), response=response))
+        server.quit()
+
     return single_failed_dir
 
 
@@ -239,3 +246,14 @@ def glob_pattern_to_regex_pattern(glob_pattern):
         raise ValueError('No * found in %r' % glob_pattern)
     magic = 'yxyxyxyxymagicyxyxyxyxy'
     return re.compile('^%s$' % re.escape(glob_pattern.replace('*', magic)).replace(magic, '(.+)'), re.IGNORECASE)
+
+
+failed_mail_template = """
+Could not upload the {no_files} attached files to
+
+{url}
+
+Error was:
+
+{response}
+"""
