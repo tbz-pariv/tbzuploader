@@ -15,8 +15,9 @@ from tbzuploader.utils import relative_url_to_absolute_url, upload_list_of_pairs
 
 
 class DummyResponse(object):
-    headers=dict()
-    status_code=201
+    headers = dict()
+    status_code = 201
+
 
 class TestCase(unittest.TestCase):
     is_source_from_tbz = True
@@ -61,7 +62,6 @@ class TestCase(unittest.TestCase):
                         return_value=10):
             self.assertEqual([], utils.filter_files_which_are_too_young('.', [['a.xml', 'a.pdf']], min_age_seconds=60))
 
-
     def test_filter_files_which_are_too_young__do_not_filter(self):
         with mock.patch('tbzuploader.utils.get_file_age',
                         return_value=100):
@@ -79,21 +79,21 @@ class TestCase(unittest.TestCase):
     def test_relative_url_to_absolute_url__without_scheme_with_file_url(self):
         self.assertEqual('file:///abc', relative_url_to_absolute_url('http://user:pwd@google.com/xyz', 'file:///abc'))
 
-
     def test_upload_list_of_pairs__single__success(self):
         directory = tempfile.mkdtemp()
         with open(os.path.join(directory, 'foo.txt'), 'wt') as fd:
             fd.write(':-)\n')
         done_directory = tempfile.mkdtemp()
-        url='https://user:password@example.com/path'
-        response=DummyResponse()
-        pairs=['foo.txt']
+        url = 'https://user:password@example.com/path'
+        response = DummyResponse()
+        pairs = ['foo.txt']
         upload_list_of_pairs__single__success(directory, url, pairs, done_directory, response)
         self.assertEqual(['foo.txt'], [os.path.basename(file_name) for file_name in glob.glob(os.path.join(done_directory, '*', 'foo.txt'))])
 
     def test_upload_list_of_pairs__single(self):
         def my_post(url, files, allow_redirects, verify):
             return DummyResponse()
+
         directory = self.create_dummy_directory()
         done_dir = os.path.join(directory, 'done')
         with mock.patch('requests.post', my_post):
@@ -104,7 +104,6 @@ class TestCase(unittest.TestCase):
         self.assertTrue(os.path.exists(os.path.join(single_done_dir, 'foo.a')), done_dir)
         self.assertTrue(os.path.exists(os.path.join(single_done_dir, 'bar.a')), done_dir)
 
-
     def test_get_pairs_from_directory__all_files__n_requests(self):
         directory = self.create_dummy_directory()
         self.assertEqual([(u'bar.a',), (u'bar.b',), (u'foo.a',), (u'foo.b',)], get_pairs_from_directory__all_files__n_requests(directory))
@@ -114,7 +113,7 @@ class TestCase(unittest.TestCase):
         self.assertEqual([(u'bar.a', u'bar.b', u'foo.a', u'foo.b')], get_pairs_from_directory__all_files__one_request(directory))
 
     def test_get_pairs_from_directory__one_request__no_pattern(self):
-            self.assertEqual([('bar.a', 'bar.b', 'foo.a', 'foo.b')],
+        self.assertEqual([('bar.a', 'bar.b', 'foo.a', 'foo.b')],
                          get_pairs_from_directory(self.create_dummy_directory(), [], all_files_in_one_request=True))
 
     def test_get_pairs_from_directory__not_one_request__no_pattern(self):
