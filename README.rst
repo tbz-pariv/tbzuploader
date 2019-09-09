@@ -76,8 +76,10 @@ Usage
     usage: tbzuploader [-h] [--patterns= LIST_OF_PATTERNS]
                        [--min-age-seconds MIN_AGE_SECONDS]
                        [--done-directory DONE_DIRECTORY]
+                       [--failed-directory FAILED_DIRECTORY]
                        [--all-files-in-one-request] [--all-files-in-n-requests]
-                       [--no-ssl-cert-verification] [--dry-run]
+                       [--no-ssl-cert-verification] [--ca-bundle CA_BUNDLE]
+                       [--dry-run]
                        local_directory url
 
     positional arguments:
@@ -98,6 +100,10 @@ Usage
       --done-directory DONE_DIRECTORY
                             files get moved to this directory after successful
                             upload. Defaults to {local_directory}/done
+      --failed-directory FAILED_DIRECTORY
+                            files get moved to this directory after failed upload
+                            due to broken files. Defaults to
+                            {local_directory}/failed
       --all-files-in-one-request
                             Upload all files in one request (if you give not
                             --pattern). Upload all matching files in one request
@@ -107,6 +113,7 @@ Usage
                             --pattern). Upload all matching files in N requests
                             (if you give --pattern)
       --no-ssl-cert-verification
+      --ca-bundle CA_BUNDLE
       --dry-run             Do not upload. Just print the pair of files which
                             would get uploaded together
 
