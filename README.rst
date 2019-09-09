@@ -73,10 +73,12 @@ Usage
 
 ::
 
+    >>> bin/tbzuploader --help
     usage: tbzuploader [-h] [--patterns= LIST_OF_PATTERNS]
                        [--min-age-seconds MIN_AGE_SECONDS]
                        [--done-directory DONE_DIRECTORY]
                        [--failed-directory FAILED_DIRECTORY]
+                       [--smtp-server SMTP_SERVER] [--mail-to MAIL_TO]
                        [--all-files-in-one-request] [--all-files-in-n-requests]
                        [--no-ssl-cert-verification] [--ca-bundle CA_BUNDLE]
                        [--dry-run]
@@ -104,6 +106,11 @@ Usage
                             files get moved to this directory after failed upload
                             due to broken files. Defaults to
                             {local_directory}/failed
+      --smtp-server SMTP_SERVER
+                            SMTP server which sends mails in case broken files
+                            were tried to be uploaded.
+      --mail-to MAIL_TO     Recipient of mails in case broken files were tried to
+                            be uploaded.
       --all-files-in-one-request
                             Upload all files in one request (if you give not
                             --pattern). Upload all matching files in one request
