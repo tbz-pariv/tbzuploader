@@ -46,11 +46,13 @@ tbzuploader will then retry to post the files next time.
 Features
 ========
 
-Handles pairs or triplets of files.
+- pairs of arbitrary size (tuples, triplets, etc.)
 
-For example you have four files: a.pdf, a.xml, b.pdf, b.xml
+  - For example you have four files: a.pdf, a.xml, b.pdf, b.xml
+  - The first upload should take a.pdf and a.xml, and the second upload b.pdf and b.xml.
+  - See the docs for `--patterns`.
 
-The first upload should take a.pdf and a.xml, and the second upload b.pdf and b.xml. See the docs for `--patterns`.
+- mail to admin if broken files are uploaded
 
 
 Example
