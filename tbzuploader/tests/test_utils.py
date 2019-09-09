@@ -14,7 +14,7 @@ from tbzuploader.utils import relative_url_to_absolute_url, upload_list_of_pairs
     get_pairs_from_directory
 
 
-class DummyResponse(object):
+class Response201(object):
     headers = dict()
     status_code = 201
 
@@ -85,14 +85,14 @@ class TestCase(unittest.TestCase):
             fd.write(':-)\n')
         done_directory = tempfile.mkdtemp()
         url = 'https://user:password@example.com/path'
-        response = DummyResponse()
+        response = Response201()
         pairs = ['foo.txt']
         upload_list_of_pairs__single__success(directory, url, pairs, done_directory, response)
         self.assertEqual(['foo.txt'], [os.path.basename(file_name) for file_name in glob.glob(os.path.join(done_directory, '*', 'foo.txt'))])
 
     def test_upload_list_of_pairs__single(self):
         def my_post(url, files, allow_redirects, verify):
-            return DummyResponse()
+            return Response201()
 
         directory = self.create_dummy_directory()
         done_dir = os.path.join(directory, 'done')
