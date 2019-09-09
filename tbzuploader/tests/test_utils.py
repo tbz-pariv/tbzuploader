@@ -11,12 +11,17 @@ import os
 from tbzuploader import utils
 from tbzuploader.utils import relative_url_to_absolute_url, upload_list_of_pairs__single__success, \
     get_pairs_from_directory__all_files__n_requests, get_pairs_from_directory__all_files__one_request, \
-    get_pairs_from_directory
+    get_pairs_from_directory, upload_list_of_pairs__single__bad_request
 
 
 class Response201(object):
     headers = dict()
     status_code = 201
+
+
+class Response400(object):
+    headers = dict()
+    status_code = 400
 
 
 class TestCase(unittest.TestCase):
@@ -90,17 +95,44 @@ class TestCase(unittest.TestCase):
         upload_list_of_pairs__single__success(directory, url, pairs, done_directory, response)
         self.assertEqual(['foo.txt'], [os.path.basename(file_name) for file_name in glob.glob(os.path.join(done_directory, '*', 'foo.txt'))])
 
-    def test_upload_list_of_pairs__single(self):
+    def test_upload_list_of_pairs__single__success_integration(self):
         def my_post(url, files, allow_redirects, verify):
             return Response201()
 
         directory = self.create_dummy_directory()
         done_dir = os.path.join(directory, 'done')
+        failed_dir = os.path.join(directory, 'failed')
         with mock.patch('requests.post', my_post):
             single_done_dir = utils.upload_list_of_pairs__single(directory, 'https://example.com',
                                                                  (os.path.join(directory, 'foo.a'), os.path.join(directory, 'bar.a')),
-                                                                 done_dir, verify=False)
+                                                                 done_dir, failed_dir, verify=False)
         self.assertEqual(['bar.b', 'done', 'foo.b'], [os.path.basename(f) for f in sorted(os.listdir(directory))])
+        self.assertTrue(os.path.exists(os.path.join(single_done_dir, 'foo.a')), done_dir)
+        self.assertTrue(os.path.exists(os.path.join(single_done_dir, 'bar.a')), done_dir)
+
+    def test_upload_list_of_pairs__single__failed(self):
+        directory = tempfile.mkdtemp()
+        with open(os.path.join(directory, 'foo.txt'), 'wt') as fd:
+            fd.write(':-(\n')
+        failed_directory = tempfile.mkdtemp()
+        url = 'https://user:password@example.com/path'
+        response = Response400()
+        pairs = ['foo.txt']
+        upload_list_of_pairs__single__bad_request(directory, url, pairs, failed_directory, response)
+        self.assertEqual(['foo.txt'], [os.path.basename(file_name) for file_name in glob.glob(os.path.join(failed_directory, '*', 'foo.txt'))])
+
+    def test_upload_list_of_pairs__single__failed_integration(self):
+        def my_post(url, files, allow_redirects, verify):
+            return Response400()
+
+        directory = self.create_dummy_directory()
+        done_dir = os.path.join(directory, 'done')
+        failed_dir = os.path.join(directory, 'failed')
+        with mock.patch('requests.post', my_post):
+            single_done_dir = utils.upload_list_of_pairs__single(directory, 'https://example.com',
+                                                                 (os.path.join(directory, 'foo.a'), os.path.join(directory, 'bar.a')),
+                                                                 done_dir, failed_dir, verify=False)
+        self.assertEqual(['bar.b', 'failed', 'foo.b'], [os.path.basename(f) for f in sorted(os.listdir(directory))])
         self.assertTrue(os.path.exists(os.path.join(single_done_dir, 'foo.a')), done_dir)
         self.assertTrue(os.path.exists(os.path.join(single_done_dir, 'bar.a')), done_dir)
 

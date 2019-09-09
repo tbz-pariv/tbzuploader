@@ -26,22 +26,21 @@ import requests
 logger = logging.getLogger(__name__)
 
 
-def upload_list_of_pairs(directory, url, list_of_pairs, done_directory, verify=True):
+def upload_list_of_pairs(directory, url, list_of_pairs, done_directory, failed_directory, verify=True):
     success = True
     for pairs in list_of_pairs:
-        done_dir = upload_list_of_pairs__single(directory, url, pairs, done_directory, verify)
+        done_dir = upload_list_of_pairs__single(directory, url, pairs, done_directory, failed_directory, verify)
         if not done_dir:
             success = False
     return success
 
 
-def upload_list_of_pairs__single(directory, url, pairs, done_directory, verify):
+def upload_list_of_pairs__single(directory, url, pairs, done_directory, failed_directory, verify):
     open_file_list = []
     for file_name in pairs:
         open_file_list.append(('files', open(os.path.join(directory, file_name), 'rb')))
     try:
-        response = requests.post(url, files=open_file_list, allow_redirects=False,
-                                 verify=verify)
+        response = requests.post(url, files=open_file_list, allow_redirects=False, verify=verify)
     except requests.exceptions.SSLError as exc:
         raise ValueError('%s. Use --no-ssl-cert-verification if you want ....' % exc)
     finally:
@@ -49,7 +48,9 @@ def upload_list_of_pairs__single(directory, url, pairs, done_directory, verify):
             open_file.close()
     if response.status_code == 201:
         return upload_list_of_pairs__single__success(directory, url, pairs, done_directory, response)
-    logger.warn('Failed: {}'.format(pairs))
+    if response.status_code == 400:
+        return upload_list_of_pairs__single__bad_request(directory, url, pairs, failed_directory, response)
+    logger.warn('Server failed to upload: {}'.format(pairs))
     logger.warn('{} {} {}'.format(
         response,
         responses.get(response.status_code),
@@ -73,17 +74,31 @@ def relative_url_to_absolute_url(request_url, response_location):
 
 
 def upload_list_of_pairs__single__success(directory, url, pairs, done_directory, response):
-    logger.info('Success :-) %s' % (relative_url_to_absolute_url(url, response.headers.get('Location'))))
+    logger.info('201 Created %s' % (relative_url_to_absolute_url(url, response.headers.get('Location'))))
     if not os.path.exists(done_directory):
         os.mkdir(done_directory)
     single_done_dir = os.path.join(done_directory, datetime.datetime.now().strftime('%Y-%m-%d--%H-%M-%S--%f'))
     os.mkdir(single_done_dir)
     for file_name in pairs:
         shutil.move(os.path.join(directory, file_name), single_done_dir)
-    logger.info('Moved files to: %s' % single_done_dir)
+    logger.info('moved files to: %s' % single_done_dir)
     with open(os.path.join(single_done_dir, 'success.txt'), 'wt') as fd:
         fd.write('%s\n' % url)
     return single_done_dir
+
+
+def upload_list_of_pairs__single__bad_request(directory, url, pairs, failed_directory, response):
+    logger.info('400 Bad Request %s' % (relative_url_to_absolute_url(url, response.headers.get('Location'))))
+    if not os.path.exists(failed_directory):
+        os.mkdir(failed_directory)
+    single_failed_dir = os.path.join(failed_directory, datetime.datetime.now().strftime('%Y-%m-%d--%H-%M-%S--%f'))
+    os.mkdir(single_failed_dir)
+    for file_name in pairs:
+        shutil.move(os.path.join(directory, file_name), single_failed_dir)
+    logger.info('moved files to: %s' % single_failed_dir)
+    with open(os.path.join(single_failed_dir, 'failed.txt'), 'wt') as fd:
+        fd.write('%s\n' % url)
+    return single_failed_dir
 
 
 def get_pairs_from_directory(directory, list_of_patterns, all_files_in_one_request=False, all_files_in_n_requests=False):

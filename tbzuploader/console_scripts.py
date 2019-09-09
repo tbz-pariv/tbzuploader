@@ -33,6 +33,8 @@ def main():
                         default=default_min_age_seconds, type=int)
     parser.add_argument('--done-directory', help='files get moved to this directory after successful upload. Defaults to {local_directory}/done',
                         dest='done_directory')
+    parser.add_argument('--failed-directory', help='files get moved to this directory after failed upload due to broken files. Defaults to {local_directory}/failed',
+                        dest='failed_directory')
 
     parser.add_argument('--all-files-in-one-request',
                         help='Upload all files in one request (if you give not --pattern). Upload all matching files in one request (if you give --pattern)',
@@ -48,8 +50,9 @@ def main():
     done_directory = args.done_directory
     if not done_directory:
         done_directory = os.path.join(args.local_directory, 'done')
-    if not os.path.exists(done_directory):
-        os.mkdir(done_directory)
+    failed_directory = args.failed_directory
+    if not failed_directory:
+        failed_directory = os.path.join(args.local_directory, 'failed')
     if args.all_files_in_one_request and args.all_files_in_n_requests:
         raise ValueError('--all-files-in-one-request and --all-files-in-n-requests are mutual exclusive')
     if args.ca_bundle and args.no_ssl_cert_verification:
@@ -70,6 +73,7 @@ def main():
         args.url,
         list_of_pairs,
         done_directory,
+        failed_directory,
         verify=args.ca_bundle if args.ca_bundle else not args.no_ssl_cert_verification
     )
     if not success:
