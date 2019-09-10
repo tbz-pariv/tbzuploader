@@ -181,7 +181,7 @@ Pull requests are welcome.
 Trivia: Why 201?
 ================
 
-Why does the http status 201 gets used, and not 200? In the beginning we used "200" for "succcessfull upload". But somewhere was a bug on the server and the server took the upload request, ignored the files and showed the login-page and replied with http status "200". Hence the files got trashed, since the client thought the upload was successfull. But of course the files were not lost. They were still in the done-directory.
+Why does the http status 201 gets used, and not 200? In the beginning we used "200" for "successful upload". But somewhere was a bug on the server and the server took the upload request, ignored the files and showed the login-page and replied with http status "200". Hence the files got trashed, since the client thought the upload was successful. But of course the files were not lost. They were still in the done-directory.
 
 That's why 201 gets used.
 
