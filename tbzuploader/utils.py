@@ -50,16 +50,17 @@ def upload_list_of_pairs__single(directory, url, pairs, done_directory, failed_d
     finally:
         for name, open_file in open_file_list:
             open_file.close()
+
+    parsed_url = urlparse(url)
+    replaced = parsed_url._replace(netloc="{}:{}@{}".format('XXXXXX', '******', parsed_url.hostname))
+    url = replaced.geturl()
+
     if response.status_code == 201:
         return upload_list_of_pairs__single__success(directory, url, pairs, done_directory, response)
     if response.status_code == 400:
         return upload_list_of_pairs__single__bad_request(directory, url, pairs, failed_directory, smtp_server, mail_from, mail_to, response)
     logger.warn('Server failed to upload: {}'.format(pairs))
-    logger.warn('{} {} {}'.format(
-        response,
-        responses.get(response.status_code),
-        url,  # TODO remove password from URL. See https://stackoverflow.com/questions/46905367/remove-password-from-url
-    ))
+    logger.warn('{} {} {}'.format(response, responses.get(response.status_code), url,))
     logger.warn(response.content)
     return None
 
