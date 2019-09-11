@@ -23,7 +23,6 @@ tbzuploader conforms to the generally accepted upload protocol.
 If the HTTP upload is successful, the server responds with "201 Created".
 The files will then be moved to a "done" directory.
 
-
 400 Bad Request
 ***************
 
@@ -177,3 +176,12 @@ There is already a spec for it.
 It would very cool if tbzuploader could support it: https://tus.io/
 
 Pull requests are welcome.
+
+
+Trivia: Why 201?
+================
+
+Why does the http status 201 gets used, and not 200? In the beginning we used "200" for "successful upload". But somewhere was a bug on the server and the server took the upload request, ignored the files and showed the login-page and replied with http status "200". Hence the files got trashed, since the client thought the upload was successful. But of course the files were not lost. They were still in the done-directory.
+
+That's why 201 gets used.
+
