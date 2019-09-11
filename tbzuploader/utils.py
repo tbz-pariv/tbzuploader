@@ -19,7 +19,10 @@ import os
 import re
 import shutil
 import time
-
+from email.mime.application import MIMEApplication
+from email.utils import formatdate
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from collections import defaultdict
 
 import requests
@@ -95,9 +98,7 @@ def upload_list_of_pairs__single__bad_request(directory, url, pairs, failed_dire
 
     # fail first in case no mail can be sent
     if smtp_server and mail_from and mail_to:
-        server = smtplib.SMTP(smtp_server)
-        server.sendmail(mail_from, mail_to, failed_mail_template.format(url=url, no_files=len(pairs), response=response))
-        server.quit()
+        send_error_mail(smtp_server, mail_from, mail_to, response, pairs)
 
     single_failed_dir = os.path.join(failed_directory, datetime.datetime.now().strftime('%Y-%m-%d--%H-%M-%S--%f'))
     os.mkdir(single_failed_dir)
@@ -250,12 +251,36 @@ def glob_pattern_to_regex_pattern(glob_pattern):
     return re.compile('^%s$' % re.escape(glob_pattern.replace('*', magic)).replace(magic, '(.+)'), re.IGNORECASE)
 
 
+def send_error_mail(smtp_server, mail_from, mail_to, response, file_paths):
+    msg = MIMEMultipart()
+    msg['From'] = mail_from
+    msg['To'] = mail_to
+    msg['Date'] = formatdate(localtime=True)
+    msg['Subject'] = 'Error Uploading Files'
+
+    msg.attach(MIMEText(failed_mail_template.format(response=response)))
+
+    for file_path in file_paths or []:
+        with open(file_path, 'rb') as file:
+            part = MIMEApplication(file.read(), Name=os.path.basename(file_path))
+        part['Content-Disposition'] = 'attachment; filename="{filename}"'.format(filename=os.path.basename(file_path))
+        msg.attach(part)
+
+    print(msg.as_string())
+    assert 0
+
+    smtp = smtplib.SMTP(smtp_server)
+    smtp.sendmail(mail_from, mail_to, msg.as_string())
+    smtp.close()
+
+
 failed_mail_template = """
 Could not upload the {no_files} attached files to
 
-{url}
+{response.url}
 
 Error was:
 
-{response}
+{response.status_code} {response.reason}
+{response.text}
 """
