@@ -98,7 +98,7 @@ def upload_list_of_pairs__single__bad_request(directory, url, pairs, failed_dire
 
     # fail first in case no mail can be sent
     if smtp_server and mail_from and mail_to:
-        send_error_mail(smtp_server, mail_from, mail_to, response, pairs)
+        send_error_mail(smtp_server, mail_from, mail_to, response, directory, pairs)
 
     single_failed_dir = os.path.join(failed_directory, datetime.datetime.now().strftime('%Y-%m-%d--%H-%M-%S--%f'))
     os.mkdir(single_failed_dir)
@@ -251,23 +251,20 @@ def glob_pattern_to_regex_pattern(glob_pattern):
     return re.compile('^%s$' % re.escape(glob_pattern.replace('*', magic)).replace(magic, '(.+)'), re.IGNORECASE)
 
 
-def send_error_mail(smtp_server, mail_from, mail_to, response, file_paths):
+def send_error_mail(smtp_server, mail_from, mail_to, response, directory, file_names):
     msg = MIMEMultipart()
     msg['From'] = mail_from
     msg['To'] = mail_to
     msg['Date'] = formatdate(localtime=True)
     msg['Subject'] = 'Error Uploading Files'
 
-    msg.attach(MIMEText(failed_mail_template.format(response=response)))
+    msg.attach(MIMEText(failed_mail_template.format(response=response, no_files=len(file_names))))
 
-    for file_path in file_paths or []:
-        with open(file_path, 'rb') as file:
-            part = MIMEApplication(file.read(), Name=os.path.basename(file_path))
-        part['Content-Disposition'] = 'attachment; filename="{filename}"'.format(filename=os.path.basename(file_path))
+    for file_name in file_names or []:
+        with open(os.path.join(directory, file_name), 'rb') as file:
+            part = MIMEApplication(file.read(), Name=file_name)
+        part['Content-Disposition'] = 'attachment; filename="{file_name}"'.format(file_name=file_name)
         msg.attach(part)
-
-    print(msg.as_string())
-    assert 0
 
     smtp = smtplib.SMTP(smtp_server)
     smtp.sendmail(mail_from, mail_to, msg.as_string())
