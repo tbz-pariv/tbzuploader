@@ -37,6 +37,8 @@ def main():
                         dest='failed_directory')
     parser.add_argument('--smtp-server', help='SMTP server which sends mails in case broken files were tried to be uploaded.',
                         dest='smtp_server')
+    parser.add_argument('--mail-from', help='Sender of mails in case broken files were tried to be uploaded.',
+                        dest='mail_to')
     parser.add_argument('--mail-to', help='Recipient of mails in case broken files were tried to be uploaded.',
                         dest='mail_to')
 
@@ -78,8 +80,7 @@ def main():
         list_of_pairs,
         done_directory,
         failed_directory,
-        args.smtp_server,
-        args.mail_to,
+        args.smtp_server, args.mail_from, args.mail_to,
         verify=args.ca_bundle if args.ca_bundle else not args.no_ssl_cert_verification
     )
     if not success:
