@@ -92,6 +92,13 @@ def upload_list_of_pairs__single__bad_request(directory, url, pairs, failed_dire
     logger.info('400 Bad Request %s' % (relative_url_to_absolute_url(url, response.headers.get('Location'))))
     if not os.path.exists(failed_directory):
         os.mkdir(failed_directory)
+
+    # fail first in case no mail can be sent
+    if smtp_server and mail_from and mail_to:
+        server = smtplib.SMTP(smtp_server)
+        server.sendmail(mail_from, mail_to, failed_mail_template.format(url=url, no_files=len(pairs), response=response))
+        server.quit()
+
     single_failed_dir = os.path.join(failed_directory, datetime.datetime.now().strftime('%Y-%m-%d--%H-%M-%S--%f'))
     os.mkdir(single_failed_dir)
     for file_name in pairs:
@@ -99,11 +106,6 @@ def upload_list_of_pairs__single__bad_request(directory, url, pairs, failed_dire
     logger.info('moved files to: %s' % single_failed_dir)
     with open(os.path.join(single_failed_dir, 'failed.txt'), 'wt') as fd:
         fd.write('%s\n' % url)
-
-    if smtp_server and mail_from and mail_to:
-        server = smtplib.SMTP(smtp_server)
-        server.sendmail(mail_from, mail_to, failed_mail_template.format(url=url, no_files=len(pairs), response=response))
-        server.quit()
 
     return single_failed_dir
 
