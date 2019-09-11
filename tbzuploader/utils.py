@@ -62,7 +62,6 @@ def upload_list_of_pairs__single(directory, url, pairs, done_directory, failed_d
     logger.warn('Server failed to upload: {}'.format(pairs))
     logger.warn('{} {} {}'.format(response, responses.get(response.status_code), url,))
     logger.warn(response.content)
-    return None
 
 
 def is_absolute_url(url):
