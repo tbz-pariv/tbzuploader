@@ -100,7 +100,7 @@ def upload_list_of_pairs__single__bad_request(directory, url, pairs, failed_dire
     with open(os.path.join(single_failed_dir, 'failed.txt'), 'wt') as fd:
         fd.write('%s\n' % url)
 
-    if smtp_server and mail_to:
+    if smtp_server and mail_from and mail_to:
         server = smtplib.SMTP(smtp_server)
         server.sendmail(mail_from, mail_to, failed_mail_template.format(url=url, no_files=len(pairs), response=response))
         server.quit()
