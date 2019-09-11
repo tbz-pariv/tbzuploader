@@ -38,7 +38,7 @@ def main():
     parser.add_argument('--smtp-server', help='SMTP server which sends mails in case broken files were tried to be uploaded.',
                         dest='smtp_server')
     parser.add_argument('--mail-from', help='Sender of mails in case broken files were tried to be uploaded.',
-                        dest='mail_to')
+                        dest='mail_from')
     parser.add_argument('--mail-to', help='Recipient of mails in case broken files were tried to be uploaded.',
                         dest='mail_to')
 
