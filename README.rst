@@ -79,10 +79,10 @@ Usage
                        [--min-age-seconds MIN_AGE_SECONDS]
                        [--done-directory DONE_DIRECTORY]
                        [--failed-directory FAILED_DIRECTORY]
-                       [--smtp-server SMTP_SERVER] [--mail-to MAIL_TO]
-                       [--all-files-in-one-request] [--all-files-in-n-requests]
-                       [--no-ssl-cert-verification] [--ca-bundle CA_BUNDLE]
-                       [--dry-run]
+                       [--smtp-server SMTP_SERVER] [--mail-from MAIL_FROM]
+                       [--mail-to MAIL_TO] [--all-files-in-one-request]
+                       [--all-files-in-n-requests] [--no-ssl-cert-verification]
+                       [--ca-bundle CA_BUNDLE] [--dry-run]
                        local_directory url
 
     positional arguments:
@@ -110,6 +110,9 @@ Usage
       --smtp-server SMTP_SERVER
                             SMTP server which sends mails in case broken files
                             were tried to be uploaded.
+      --mail-from MAIL_FROM
+                            Sender of mails in case broken files were tried to be
+                            uploaded.
       --mail-to MAIL_TO     Recipient of mails in case broken files were tried to
                             be uploaded.
       --all-files-in-one-request
