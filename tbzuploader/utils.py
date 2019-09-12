@@ -54,6 +54,7 @@ def upload_list_of_pairs__single(directory, url, pairs, done_directory, failed_d
     parsed_url = urlparse(url)
     replaced = parsed_url._replace(netloc="{}:{}@{}".format('XXXXXX', '******', parsed_url.hostname))
     url = replaced.geturl()
+    response.url = parsed_url
 
     if response.status_code == 201:
         return upload_list_of_pairs__single__success(directory, url, pairs, done_directory, response)
