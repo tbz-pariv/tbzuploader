@@ -69,7 +69,7 @@ then the local files in "my-local-dir" get moved to "my-local-dir/done".
 If the upload **failed** because the server rejects the files (400 Bad Request),
 then the local files in "my-local-dir" get moved to "my-local-dir/failed".
 
-If there was an other error (network timeout, server overload, ...) the files stay in the current location and the next call of the command line tool will try to upload the files again.
+If there was another error (network timeout, server overload, ...), the files stay in the current location and the next call of the command line tool will try to upload the files again.
 
 Usage
 =====
