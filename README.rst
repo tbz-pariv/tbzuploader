@@ -7,7 +7,7 @@ tbzuploader - Generic HTTP Uploading
 
 A lot of daily work is based on regular files.
 
-tbzuploader is a tool which detects uploadable files and posts them via HTTP while conforming to the
+tbzuploader is a command line tool which detects uploadable files and posts them via HTTP while conforming to the
 standardized `HTTP Status Codes <https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#2xx_Success>`_.
 
 
@@ -68,6 +68,8 @@ then the local files in "my-local-dir" get moved to "my-local-dir/done".
 
 If the upload **failed** because the server rejects the files (400 Bad Request),
 then the local files in "my-local-dir" get moved to "my-local-dir/failed".
+
+If there was an other error (network timeout, server overload, ...) the files stay in the current location and the next call of the command line tool will try to upload the files again.
 
 Usage
 =====
@@ -176,7 +178,7 @@ Unfortunately, tbzuploader does not support resumable uploads up to now.
 
 There is already a spec for it. 
 
-It would very cool if tbzuploader could support it: https://tus.io/
+It would very cool if tbzuploader could support this spec: https://tus.io/
 
 Pull requests are welcome.
 
