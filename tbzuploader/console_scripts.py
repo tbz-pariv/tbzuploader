@@ -68,7 +68,7 @@ def main():
                                                    all_files_in_n_requests=args.all_files_in_n_requests)
     list_of_pairs = utils.filter_files_which_are_too_young(args.local_directory, list_of_pairs, args.min_age_seconds)
     if not list_of_pairs:
-        logging.info('No pairs to upload found.')
+        logging.info('No files to upload found.')
         return
     if args.dry_run:
         for pairs in list_of_pairs:
