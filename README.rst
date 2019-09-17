@@ -54,6 +54,21 @@ Features
 - mail to admin if broken files are uploaded
 
 
+UseCase
+=======
+
+You are providing a modern software-as-a-service solution. You have nice APIs, but a lot of your customers don't have programming skills. All they can do is to provide you files. In the past these files were imported using protocols like ftp, scp, windows (smb) shares, ...
+
+But you want to stop these dated procotols, since you (the receiver) can't validate the data before accepting it.
+
+`tbzuploader` is the solution: You write a simple http service which validates the uploaded files. If the data is valid return http 201.
+
+Then you tell the customer to use `tbzuploader`. It is a simple command line tool which works everywhere (linux, windows, mac ...)
+
+If the data of the customer is valid, all the data gets imported.
+
+If the data of the customer is not valid, the issue stays where it belongs: on the sending side, the client.
+
 Example
 =======
 
