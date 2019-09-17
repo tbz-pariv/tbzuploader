@@ -65,7 +65,7 @@ But you want to stop these dated procotols, since you (the receiver) can't valid
 
 Then you tell the customer to use `tbzuploader`. It is a simple command line tool which works everywhere (linux, windows, mac ...)
 
-If the data of the customer is valid, all the data gets imported.
+If the data of the customer is valid, the data gets imported.
 
 If the data of the customer is not valid, the issue stays where it belongs: on the sending side, the client.
 
