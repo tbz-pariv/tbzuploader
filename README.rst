@@ -20,15 +20,15 @@ tbzuploader conforms to the generally accepted upload protocol.
 201 Created
 ***********
 
-If the HTTP upload is successful, the server responds with "201 Created".
-The files will then be moved to a "done" directory.
+If the HTTP upload is successful, the server responds with ``201 Created``.
+The files will then be moved to a ``done`` directory.
 
 400 Bad Request
 ***************
 
 If the HTTP upload is not successful and it is a client error (such as wrong files or corrupted files),
-the server responds with "400 Bad Request".
-The files will then be moved to a "failed" directory.
+the server responds with ``400 Bad Request``.
+The files will then be moved to a ``failed`` directory.
 
 In case you want to inform an admin, specify an email address which gets notified in that case, because
 failed files won't be retried.
@@ -38,7 +38,7 @@ failed files won't be retried.
 ************************************
 
 If the HTTP upload was not successful (such as an login page, outage, programming error or overload),
-the server responds with other status codes (such as 500 Internal Server Error).
+the server responds with other status codes (such as ``500 Internal Server Error``).
 tbzuploader will then retry to post the files next time.
 
 
@@ -47,9 +47,9 @@ Features
 
 - pairs of arbitrary size (tuples, triplets, etc.)
 
-  - For example you have four files: a.pdf, a.xml, b.pdf, b.xml
-  - The first upload should take a.pdf and a.xml, and the second upload b.pdf and b.xml.
-  - See the docs for `--patterns`.
+  - For example you have four files: ``a.pdf``, ``a.xml``, ``b.pdf``, ``b.xml``
+  - The first upload should take ``a.pdf`` and ``a.xml``, and the second upload ``b.pdf`` and ``b.xml``.
+  - See the docs for ``--patterns``.
 
 - mail to admin if broken files are uploaded
 
@@ -61,7 +61,7 @@ Imagine you provide a modern solution (ReST/HTTP/SaaS) with a nice API and many 
 
 The main problem with these dated protocols is the missing data validation on the receiving side (on your side!).
 
-`tbzuploader` helps overcome this obstacle:
+tbzuploader helps overcome this obstacle:
 
 1. First, you write a simple HTTP service which validates the uploaded files. If the data is valid, return ``201 Success``.
 2. Second, you tell the customer to use `tbzuploader`. It is a simple command line tool which works everywhere (on Linux, Windows, Mac, ...)
@@ -70,6 +70,7 @@ If the data of the customer is valid, the data will be imported.
 
 If the data of the customer is not valid, the issue will stay where it belongs: on the sending side (on the client's side!).
 
+
 Example
 =======
 
@@ -77,13 +78,13 @@ Example
 
     user@host> tbzuploader my-local-dir https://user:password@myhost/upload-files
 
-This will upload files from directory "my-local-dir" to the specified URL.
+This will upload files from directory ``my-local-dir`` to the specified URL.
 
-If the upload was **successful** (server returned http status "201 Created"),
-then the local files in "my-local-dir" get moved to "my-local-dir/done".
+If the upload was **successful** (server returned HTTP status ``201 Created``),
+then the local files in ``my-local-dir`` get moved to ``my-local-dir/done``.
 
-If the upload **failed** because the server rejects the files (400 Bad Request),
-then the local files in "my-local-dir" get moved to "my-local-dir/failed".
+If the upload **failed** because the server rejects the files (``400 Bad Request``),
+then the local files in ``my-local-dir`` get moved to ``my-local-dir/failed``.
 
 If there was another error (network timeout, server overload, ...), the files stay in the current location and the next call of the command line tool will try to upload the files again.
 
@@ -202,7 +203,7 @@ Pull requests are welcome.
 Trivia: Why 201?
 ================
 
-Why does the http status 201 gets used, and not 200? In the beginning we used "200" for "successful upload". But somewhere was a bug on the server and the server took the upload request, ignored the files and showed the login-page and replied with http status "200". Hence the files got trashed, since the client thought the upload was successful. But of course the files were not lost. They were still in the done-directory.
+Why does the http status ``201 Created`` gets used, and not ``200 Success``? In the beginning we used ``200 Success`` for "successful upload". But somewhere was a bug on the server and the server took the upload request, ignored the files and showed the login-page and replied with http status ``200 Success``. Hence the files got trashed, since the client thought the upload was successful. But of course the files were not lost. They were still in the done-directory.
 
 That's why 201 gets used.
 
