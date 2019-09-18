@@ -54,20 +54,21 @@ Features
 - mail to admin if broken files are uploaded
 
 
-UseCase
-=======
+Use Case
+========
 
-You are providing a modern software-as-a-service solution. You have nice APIs, but a lot of your customers don't have programming skills. Sending data to the APIs is too complicated for them. An easier solution is needed. But the customers without programming skills can provide files. In the past these files were imported using protocols like ftp, scp, windows (smb) shares, ...
+Imagine you provide a modern solution (ReST/HTTP/SaaS) with a nice API and many many manhours invested into it. Unfortunately, many of your customers don't have any programming skills. The only thing they can do is providing files such as PDF documents, Excel workbooks, CSV tables, XML files etc. In the past, these files were imported using protocols like ftp, scp, windows shares (smb) and others.
 
-But you want to stop these dated procotols, since you (the receiver) can't validate the data before accepting it.
+The main problem with these dated protocols is the missing data validation on the receiving side (on your side!).
 
-`tbzuploader` is the solution: You write a simple http service which validates the uploaded files. If the data is valid return http 201.
+`tbzuploader` helps overcome this obstacle:
 
-Then you tell the customer to use `tbzuploader`. It is a simple command line tool which works everywhere (linux, windows, mac ...)
+1. First, you write a simple HTTP service which validates the uploaded files. If the data is valid, return ``201 Success``.
+2. Second, you tell the customer to use `tbzuploader`. It is a simple command line tool which works everywhere (on Linux, Windows, Mac, ...)
 
-If the data of the customer is valid, the data gets imported.
+If the data of the customer is valid, the data will be imported.
 
-If the data of the customer is not valid, the issue stays where it belongs: on the sending side, the client.
+If the data of the customer is not valid, the issue will stay where it belongs: on the sending side (on the client's side!).
 
 Example
 =======
