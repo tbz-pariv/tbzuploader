@@ -59,7 +59,7 @@ Use Case
 
 Imagine you provide a modern solution (ReST/HTTP/SaaS) with a nice API and many many manhours invested into it. Unfortunately, many of your customers don't have any programming skills. The only thing they can do is providing files such as PDF documents, Excel workbooks, CSV tables, XML files etc. In the past, these files were imported using protocols like ftp, scp, windows shares (smb) and others.
 
-The main problem with these dated protocols is the missing data validation on the receiving side (on your side!).
+The main problem with these dated protocols is the missing data validation **on the receiving side** (on your side!).
 
 tbzuploader helps overcome this obstacle:
 
@@ -68,7 +68,7 @@ tbzuploader helps overcome this obstacle:
 
 If the data of the customer is valid, the data will be imported.
 
-If the data of the customer is not valid, the issue will stay where it belongs: on the sending side (on the client's side!).
+If the data of the customer is not valid, the issue will stay where it belongs: **on the sending side** (on the client's side!).
 
 
 Example
