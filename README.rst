@@ -57,7 +57,7 @@ Features
 UseCase
 =======
 
-You are providing a modern software-as-a-service solution. You have nice APIs, but a lot of your customers don't have programming skills. All they can do is to provide you files. In the past these files were imported using protocols like ftp, scp, windows (smb) shares, ...
+You are providing a modern software-as-a-service solution. You have nice APIs, but a lot of your customers don't have programming skills. Sending data to the APIs is too complicated for them. An easier solution is needed. But the customers without programming skills can provide files. In the past these files were imported using protocols like ftp, scp, windows (smb) shares, ...
 
 But you want to stop these dated procotols, since you (the receiver) can't validate the data before accepting it.
 
