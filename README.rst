@@ -203,7 +203,9 @@ Pull requests are welcome.
 Trivia: Why 201?
 ================
 
-Why does the http status ``201 Created`` gets used, and not ``200 Success``? In the beginning we used ``200 Success`` for "successful upload". But somewhere was a bug on the server and the server took the upload request, ignored the files and showed the login-page and replied with http status ``200 Success``. Hence the files got trashed, since the client thought the upload was successful. But of course the files were not lost. They were still in the done-directory.
+Why using ``201 Created`` instead of ``200 Success``?
+
+In the beginning, we used ``200 Success`` for "successful upload". A server misconfiguration caused a redirect to the login page, thus ignoring the uploaded files and returning a ``200 Success``. Since the upload was "successful", the files were moved into ``done`` erroneously.
 
 That's why 201 gets used.
 
